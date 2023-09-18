@@ -14,9 +14,9 @@ func main() {
 }
 
 func Serve() error {
-	app := serve.SetRouters()
-
 	database.Connect()
+	
+	app := serve.SetRouters()
 
 	return app.Listen(":3000")	
 }

@@ -5,17 +5,14 @@ import (
 	"log"
 
 	"github.com/ValentinAltamirano1/WashUp-Api/model"
-	"github.com/jinzhu/gorm"
+    "gorm.io/driver/postgres"
 	_ "github.com/lib/pq"
+	"gorm.io/gorm"
 )
 
-type Dbinstance struct {
-    Db *gorm.DB
-}
+var DB *gorm.DB
 
-var DB Dbinstance
-
-func Connect() Dbinstance {
+func Connect() {
     const (
         host     = "localhost"
         port     = 5432
@@ -25,16 +22,19 @@ func Connect() Dbinstance {
     )
 
     connStr := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
-    db, err := gorm.Open("postgres", connStr)
+    db, err := gorm.Open(postgres.Open(connStr), &gorm.Config{})
 
     if err != nil {
         log.Panic("error connecting to the database: ", err)
     }
 
-    defer db.Close()
+    _, err = db.DB()
+    if err != nil {
+        log.Fatal(err)
+    }
 
+    DB = db
+
+    
     db.AutoMigrate(&model.User{})
-
-    DB := Dbinstance{Db: db}
-    return DB
 }
