@@ -2,6 +2,7 @@ package serve
 
 import (
 	"github.com/ValentinAltamirano1/WashUp-Api/handler"
+	"github.com/ValentinAltamirano1/WashUp-Api/middleware"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -23,6 +24,10 @@ func SetRouters() *fiber.App {
 
 	app.Post("/users", handler.UserCreate)
 	app.Post("/login", handler.UserLogin)
+	app.Post("/employee", handler.EmployeeCreate)
+	app.Post("/employeelogin", handler.EmployeeLogin)
+
+	app.Use(middleware.AuthRequired())
 
 	return app
 }
