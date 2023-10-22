@@ -5,34 +5,35 @@ import (
 	"github.com/ValentinAltamirano1/WashUp-Api/model"
 	"github.com/ValentinAltamirano1/WashUp-Api/service"
 	"github.com/gofiber/fiber/v2"
+	"fmt"
 )
 
-func UserCreate(c *fiber.Ctx) error {
+func EmployeeCreate(c *fiber.Ctx) error {
 	db := database.DB
-	userClient := model.UserClient{DB: db}
-	var params service.UserParams
+	employeeClient := model.EmployeeClient{DB: db}
+	var params service.EmployeeParams
 
 	if err := c.BodyParser(&params); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "error parsing JSON",
 		})
 	}
-
-	user, err := service.CreateUser(userClient, params)
+	fmt.Println(params)
+	employee, err := service.CreateEmployee(employeeClient, params)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "error trying to create user",
+			"error": "error trying to create employee",
 		})
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(user)
+	return c.Status(fiber.StatusCreated).JSON(employee)
 }
 
-func UserLogin(c *fiber.Ctx) error {
+func EmployeeLogin(c *fiber.Ctx) error {
 	db := database.DB
-	userClient := model.UserClient{DB: db}
-	var params service.LoginParams
+	employeeClient := model.EmployeeClient{DB: db}
+	var params service.EmployeeParams
 
 	if err := c.BodyParser(&params); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -40,13 +41,13 @@ func UserLogin(c *fiber.Ctx) error {
 		})
 	}
 
-	login, err := service.LoginUser(userClient, params)
+	employee, err := service.LoginEmployee(employeeClient, params.Email, params.Password)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "error trying to login user",
+			"error": "error trying to login employee",
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(login)
+	return c.Status(fiber.StatusOK).JSON(employee)
 }

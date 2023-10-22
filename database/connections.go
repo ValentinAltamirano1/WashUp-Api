@@ -37,4 +37,5 @@ func Connect() {
 
     
     db.AutoMigrate(&model.User{})
+    db.AutoMigrate(&model.Employee{})
 }

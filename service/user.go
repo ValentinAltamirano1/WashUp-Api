@@ -1,10 +1,9 @@
 package service
 
 import (
-	"errors"
-
 	"github.com/ValentinAltamirano1/WashUp-Api/model"
-	"golang.org/x/crypto/bcrypt"
+
+	"errors"
 )
 
 type UserParams struct {
@@ -16,7 +15,7 @@ type UserParams struct {
 func CreateUser(ur model.UserClient, userParams UserParams) (*model.User, error) {
 	collisionUser, err := ur.UserFirst("email = ?", userParams.Email)
 	if collisionUser != nil {
-		return nil, errors.New("email already exists")
+		return nil, errors.New("user already exists")
 	}
 
 	user := &model.User{
@@ -31,14 +30,6 @@ func CreateUser(ur model.UserClient, userParams UserParams) (*model.User, error)
 	}
 
 	return user, nil
-}
-
-func hashPassword(plainPassword string) string {
-	bcryptHash, err := bcrypt.GenerateFromPassword([]byte(plainPassword), 12)
-	if err != nil {
-		return "error"
-	}
-	return string(bcryptHash)
 }
 
 type LoginParams struct {
@@ -61,8 +52,4 @@ func LoginUser(ur model.UserClient, loginParams LoginParams) (*LoginParams, erro
 		Email:    user.Email,
 		Password: user.Password,
 	}, nil
-}
-
-func ValidatePassword(passwordHash, password string) error {
-	return bcrypt.CompareHashAndPassword([]byte(passwordHash), []byte(password))
 }
