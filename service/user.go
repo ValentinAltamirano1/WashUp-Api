@@ -37,7 +37,12 @@ type LoginParams struct {
 	Password string `json:"password"`
 }
 
-func LoginUser(ur model.UserClient, loginParams LoginParams) (*LoginParams, error) {
+type LoginResponse struct {
+	Email string `json:"email"`
+	Token string `json:"token"`
+}
+
+func LoginUser(ur model.UserClient,loginParams LoginParams) (*LoginResponse, error) {
 	user, err := ur.UserFirst("email = ?", loginParams.Email)
 	if err != nil {
 		return nil, errors.New("error trying to find user")
@@ -47,9 +52,14 @@ func LoginUser(ur model.UserClient, loginParams LoginParams) (*LoginParams, erro
 	if err != nil {
 		return nil, errors.New("invalid password")
 	}
+
+	token, err := GenerateToken(user.Email)
+	if err != nil {
+		return nil, errors.New("error trying to generate token")
+	}
 	
-	return &LoginParams{
+	return &LoginResponse{
 		Email:    user.Email,
-		Password: user.Password,
+		Token: token,
 	}, nil
 }
