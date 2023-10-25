@@ -35,6 +35,8 @@ func EmployeeLogin(c *fiber.Ctx) error {
 	employeeClient := model.EmployeeClient{DB: db}
 	var params service.EmployeeParams
 
+	
+
 	if err := c.BodyParser(&params); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "error parsing JSON",
@@ -48,6 +50,5 @@ func EmployeeLogin(c *fiber.Ctx) error {
 			"error": "error trying to login employee",
 		})
 	}
-
 	return c.Status(fiber.StatusOK).JSON(employee)
 }

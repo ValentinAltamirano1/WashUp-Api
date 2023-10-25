@@ -17,7 +17,7 @@ func Connect() {
         host     = "localhost"
         port     = 5432
         user     = "postgres"
-        password = "valenalt"
+        password = "coti"
         dbname   = "washup"
     )
 
