@@ -1,7 +1,10 @@
 package handler
 
 import (
+	"fmt"
+
 	"github.com/ValentinAltamirano1/WashUp-Api/database"
+	"github.com/ValentinAltamirano1/WashUp-Api/email"
 	"github.com/ValentinAltamirano1/WashUp-Api/model"
 	"github.com/ValentinAltamirano1/WashUp-Api/service"
 	"github.com/gofiber/fiber/v2"
@@ -49,4 +52,29 @@ func UserLogin(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(login)
+}
+
+func ResetPassword(c *fiber.Ctx) error {
+	db := database.DB
+	userClient := model.UserClient{DB: db}
+	var params service.ResetPasswordParams
+
+	if err := c.BodyParser(&params); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "error parsing JSON",
+		})
+	}
+
+	apiKey := "44211a0217b78b1c2dbc463bc13ec6162d48fa16"
+	emailClient := email.NewSendGridClient(apiKey)
+	user, err := service.ResetPassword(userClient, emailClient, params)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "error trying to reset password",
+		})
+	}
+
+	fmt.Println(err)
+	return c.Status(fiber.StatusOK).JSON(user)
 }
