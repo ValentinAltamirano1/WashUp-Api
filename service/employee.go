@@ -15,6 +15,8 @@ type EmployeeParams struct {
 	Mobile string `json:"mobile"`
 	BirthDate time.Time `json:"birth_date"`
 	Gender string `json:"gender"`
+	Department string `json:"department"`
+	Adress string `json:"adress"`
 }
 
 func CreateEmployee(er model.EmployeeClient, employeeParams EmployeeParams) (*model.Employee, error) {
@@ -35,6 +37,8 @@ func CreateEmployee(er model.EmployeeClient, employeeParams EmployeeParams) (*mo
 		BirthDate: employeeParams.BirthDate,
 		Gender: employeeParams.Gender,
 		AdmissionDate: time.Now(),
+		Department: employeeParams.Department,
+		Adress: employeeParams.Adress,
 	}
 
 	err = er.SaveEmployee(employee)
