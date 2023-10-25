@@ -20,6 +20,8 @@ type Employee struct {
 	BirthDate time.Time `json:"birth_date"`
 	Gender string `json:"gender"`
 	AdmissionDate time.Time `json:"admission_date"`
+	Department string `json:"department"`
+	Adress string `json:"adress"`
 }
 
 type EmployeeRepository interface {
