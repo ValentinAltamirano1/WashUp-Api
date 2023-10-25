@@ -26,6 +26,8 @@ func SetRouters() *fiber.App {
 	app.Post("/login", handler.UserLogin)
 	app.Post("/employee", handler.EmployeeCreate)
 	app.Post("/employeelogin", handler.EmployeeLogin)
+	app.Post("/reservations", handler.ReservaCreate)
+	app.Get("/fechasdisponibles/:service", handler.ObtenerFechasDisponiblesHandler)
 
 	app.Use(middleware.AuthRequired())
 
