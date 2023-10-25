@@ -3,6 +3,8 @@ package service
 import (
 	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
+	"crypto/rand"
+	"encoding/hex"
 
 	"time"
 )
@@ -57,4 +59,13 @@ func hashPassword(plainPassword string) string {
 
 func ValidatePassword(passwordHash, password string) error {
 	return bcrypt.CompareHashAndPassword([]byte(passwordHash), []byte(password))
+}
+
+func generateUniqueID() (string, error) {
+	bytes := make([]byte, 16) // 16 bytes = 128 bits
+	_, err := rand.Read(bytes)
+	if err != nil {
+		return "", err
+	}
+	return hex.EncodeToString(bytes), nil
 }

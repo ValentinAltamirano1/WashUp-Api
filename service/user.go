@@ -1,10 +1,10 @@
 package service
 
 import (
+	"github.com/ValentinAltamirano1/WashUp-Api/email"
 	"github.com/ValentinAltamirano1/WashUp-Api/model"
 
 	"errors"
-	"fmt"
 )
 
 type UserParams struct {
@@ -69,14 +69,21 @@ type ResetPasswordParams struct {
 	Email    string `json:"email"`
 }
 
-func ResetPassword(ur model.UserClient, resetPasswordParams ResetPasswordParams) (*model.User, error) {
+func ResetPassword(ur model.UserClient, ec email.EmailClient, resetPasswordParams ResetPasswordParams) (*model.User, error) {
 	user, err := ur.UserFirst("email = ?", resetPasswordParams.Email)
 	if err != nil {
 		return nil, errors.New("error trying to find user")
 	}
 
-	fmt.Println(user)
+	uniqueID, err := generateUniqueID()
+	if err != nil {
+		return nil, errors.New("error trying to generate unique id")
+	}
 
+	err = ec.ResetPassword(user.Email, uniqueID)
+	if err != nil {
+		return nil, errors.New("error trying to send email")
+	}
 	
 	return user, nil
 }
