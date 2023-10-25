@@ -12,13 +12,14 @@ type EmployeeClient struct {
 
 type Employee struct {
     gorm.Model
-    Name  string `json:"name"`
+    FullName  string `json:"fullname"`
 	CredentialID uint `json:"credential_id"`
-	PhoneNum string `json:"phone_num"`
-	AdmissionDate time.Time `json:"admission_date"`
+	Email string `json:"email" gorm:"uniqueIndex"`
+    Password string 	
+	Mobile string `json:"mobile"`
 	BirthDate time.Time `json:"birth_date"`
-    Email string `json:"email" gorm:"uniqueIndex"`
-    Password string 
+	Gender string `json:"gender"`
+	AdmissionDate time.Time `json:"admission_date"`
 }
 
 type EmployeeRepository interface {
