@@ -4,6 +4,7 @@ import (
 	"github.com/ValentinAltamirano1/WashUp-Api/model"
 
 	"errors"
+	"fmt"
 )
 
 type UserParams struct {
@@ -62,4 +63,20 @@ func LoginUser(ur model.UserClient,loginParams LoginParams) (*LoginResponse, err
 		Email:    user.Email,
 		Token: token,
 	}, nil
+}
+
+type ResetPasswordParams struct {
+	Email    string `json:"email"`
+}
+
+func ResetPassword(ur model.UserClient, resetPasswordParams ResetPasswordParams) (*model.User, error) {
+	user, err := ur.UserFirst("email = ?", resetPasswordParams.Email)
+	if err != nil {
+		return nil, errors.New("error trying to find user")
+	}
+
+	fmt.Println(user)
+
+	
+	return user, nil
 }

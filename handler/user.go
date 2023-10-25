@@ -50,3 +50,25 @@ func UserLogin(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(login)
 }
+
+func ResetPassword(c *fiber.Ctx) error {
+	db := database.DB
+	userClient := model.UserClient{DB: db}
+	var params service.ResetPasswordParams
+
+	if err := c.BodyParser(&params); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "error parsing JSON",
+		})
+	}
+
+	user, err := service.ResetPassword(userClient, params)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "error trying to reset password",
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(user)
+}
