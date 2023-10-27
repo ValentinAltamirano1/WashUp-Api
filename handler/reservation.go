@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/ValentinAltamirano1/WashUp-Api/database"
 	"github.com/ValentinAltamirano1/WashUp-Api/model"
@@ -10,29 +11,60 @@ import (
 )
 
 func ObtenerFechasDisponiblesHandler(c *fiber.Ctx) error {
-    servicio := c.Params("servicio") // Obtiene el servicio de la solicitud (ajusta esto según tu enrutamiento)
-	fmt.Println("servicio")
-	fmt.Println(servicio)
-    // Obtén el servicio de reserva
-    db := database.DB
-    reservationClient := model.ReservationClient{DB: db}
+	fmt.Println("URL completa:", c.OriginalURL())
+	servicioParam := c.Params("service") // Obtiene el servicio de la solicitud (ajusta esto según tu enrutamiento)
 
-    // Llama a la función service.ObtenerFechasDisponibles para obtener las fechas no disponibles.
-    fechasNoDisponibles, err := service.ObtenerFechasDisponibles(reservationClient, servicio)
+	// Reemplaza "%20" con un espacio en blanco en el valor del parámetro servicio
+	servicio := strings.Replace(servicioParam, "%20", " ", -1)
 
-    if err != nil {
-        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-            "error": "error al obtener fechas no disponibles",
-        })
-    }
+	fmt.Println("servicio:", servicio)
 
-    // Responde con un código 200 (OK) y envía las fechas no disponibles.
-    return c.Status(fiber.StatusOK).JSON(fiber.Map{
-        "fechas_no_disponibles": fechasNoDisponibles,
-    })
+	// Obtén el servicio de reserva
+	db := database.DB
+	reservationClient := model.ReservationClient{DB: db}
+
+	// Llama a la función service.ObtenerFechasDisponibles para obtener las fechas no disponibles.
+	fechasNoDisponibles, err := service.ObtenerFechasDisponibles(reservationClient, servicio)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "error al obtener fechas no disponibles",
+		})
+	}
+
+	// Responde con un código 200 (OK) y envía las fechas no disponibles.
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"fechas_no_disponibles": fechasNoDisponibles,
+	})
 }
 
+func ObtenerHorariosDisponiblesHandler(c *fiber.Ctx) error {
+	fmt.Println("URL completa:", c.OriginalURL())
+	servicioParam := c.Params("service") // Obtiene el servicio de la solicitud (ajusta esto según tu enrutamiento)
 
+	// Reemplaza "%20" con un espacio en blanco en el valor del parámetro servicio
+	servicio := strings.Replace(servicioParam, "%20", " ", -1)
+
+	fmt.Println("servicio:", servicio)
+	
+	// Obtén el servicio de reserva
+	db := database.DB
+	reservationClient := model.ReservationClient{DB: db}
+
+	// Llama a la función service.ObtenerFechasDisponibles para obtener las fechas no disponibles.
+	fechasNoDisponibles, err := service.ObtenerFechasDisponibles(reservationClient, servicio)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "error al obtener fechas no disponibles",
+		})
+	}
+
+	// Responde con un código 200 (OK) y envía las fechas no disponibles.
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"fechas_no_disponibles": fechasNoDisponibles,
+	})
+}
 // ReservaCreate maneja las solicitudes para crear una nueva reserva.
 func ReservaCreate(c *fiber.Ctx) error {
 	db := database.DB
