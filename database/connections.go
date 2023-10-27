@@ -17,7 +17,7 @@ func Connect() {
         host     = "localhost"
         port     = 5432
         user     = "postgres"
-        password = "coti"
+        password = "toscas2015"
         dbname   = "washup"
     )
 
@@ -38,4 +38,5 @@ func Connect() {
     
     db.AutoMigrate(&model.User{})
     db.AutoMigrate(&model.Employee{})
+    db.AutoMigrate(&model.Reservation{})
 }
