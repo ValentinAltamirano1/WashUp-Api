@@ -38,4 +38,5 @@ func Connect() {
     
     db.AutoMigrate(&model.User{})
     db.AutoMigrate(&model.Employee{})
+    db.AutoMigrate(&model.Reservation{})
 }
