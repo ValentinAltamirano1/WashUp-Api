@@ -4,19 +4,19 @@ import (
 	"github.com/ValentinAltamirano1/WashUp-Api/handler"
 	"github.com/ValentinAltamirano1/WashUp-Api/middleware"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 func SetRouters() *fiber.App {
 	app := fiber.New()
 
 	// Configurar encabezados CORS para permitir solicitudes desde http://localhost:3000
-	app.Use(func(c *fiber.Ctx) error {
-		c.Set("Access-Control-Allow-Origin", "http://localhost:3000")
-		c.Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE")
-		c.Set("Access-Control-Allow-Headers", "Origin, Content-Type, Accept")
-		c.Set("Access-Control-Allow-Credentials", "true")
-		return c.Next()
-	})
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "http://localhost:3000",
+		AllowMethods: "GET, POST, PUT, DELETE",
+		AllowHeaders: "Origin, Content-Type, Accept,Authorization",
+		AllowCredentials: true,
+	}))
 
 	app.Options("*", func(c *fiber.Ctx) error {
 		return c.SendStatus(fiber.StatusNoContent)

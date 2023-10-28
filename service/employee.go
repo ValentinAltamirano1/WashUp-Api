@@ -1,20 +1,24 @@
 package service
 
 import (
+	"fmt"
+
 	"github.com/ValentinAltamirano1/WashUp-Api/model"
 
-	"time"
 	"errors"
+	"time"
 )
 
 type EmployeeParams struct {
-	Name	 string `json:"name"`
-	CredentialID uint `json:"credential_id"`
-	PhoneNum string `json:"phone_num"`
-	AdmissionDate time.Time `json:"admission_date"`
-	BirthDate time.Time `json:"birth_date"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
+    FullName  string `json:"fullname"`
+	Email string `json:"email"`
+    Password string 	
+	CredentialID string `json:"credential_id"`
+	Mobile string `json:"mobile"`
+	BirthDate string `json:"birth_date"`
+	Gender string `json:"gender"`
+	Department string `json:"department"`
+	Adress string `json:"adress"`
 }
 
 func CreateEmployee(er model.EmployeeClient, employeeParams EmployeeParams) (*model.Employee, error) {
@@ -23,18 +27,27 @@ func CreateEmployee(er model.EmployeeClient, employeeParams EmployeeParams) (*mo
 		return nil, errors.New("employee already exists")
 	}
 
+	fmt.Println(collisionEmployee)
+	fmt.Println(err)
+	fmt.Println(employeeParams)
+
 	employee := &model.Employee{
-		Name:     employeeParams.Name,
-		CredentialID: employeeParams.CredentialID,
-		PhoneNum: employeeParams.PhoneNum,
-		AdmissionDate: employeeParams.AdmissionDate,
-		BirthDate: employeeParams.BirthDate,
-		Email:    employeeParams.Email,
+		FullName: employeeParams.FullName,
+		Email: employeeParams.Email,
 		Password: hashPassword(employeeParams.Password),
+		CredentialID: employeeParams.CredentialID,
+		Mobile: employeeParams.Mobile,
+		BirthDate: employeeParams.BirthDate,
+		Gender: employeeParams.Gender,
+		Department: employeeParams.Department,
+		Adress: employeeParams.Adress,
+		AdmissionDate: time.Now(),
 	}
 
+	fmt.Println(employee)
 	err = er.SaveEmployee(employee)
 	if err != nil {
+		fmt.Println(err)
 		return nil, errors.New("error trying to save employee")
 	}
 

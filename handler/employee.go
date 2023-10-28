@@ -18,7 +18,7 @@ func EmployeeCreate(c *fiber.Ctx) error {
 			"error": "error parsing JSON",
 		})
 	}
-	fmt.Println(params)
+	
 	employee, err := service.CreateEmployee(employeeClient, params)
 
 	if err != nil {
@@ -26,7 +26,7 @@ func EmployeeCreate(c *fiber.Ctx) error {
 			"error": "error trying to create employee",
 		})
 	}
-
+	fmt.Println(err)
 	return c.Status(fiber.StatusCreated).JSON(employee)
 }
 
@@ -42,12 +42,12 @@ func EmployeeLogin(c *fiber.Ctx) error {
 	}
 
 	employee, err := service.LoginEmployee(employeeClient, params.Email, params.Password)
+	fmt.Println(employee)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "error trying to login employee",
 		})
 	}
-
 	return c.Status(fiber.StatusOK).JSON(employee)
 }
