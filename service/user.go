@@ -63,3 +63,25 @@ func LoginUser(ur model.UserClient,loginParams LoginParams) (*LoginResponse, err
 		Token: token,
 	}, nil
 }
+
+type GoogleLoginParams struct {
+	Token string `json:"token"`
+	Email string `json:"email"`
+}
+
+func GoogleLoginUser(ur model.UserClient, googleLoginParams GoogleLoginParams) (*LoginResponse, error) {
+	user, err := ur.UserFirst("email = ?", googleLoginParams.Email)
+	if err != nil {
+		return nil, errors.New("error trying to find user")
+	}
+
+	token, err := GenerateToken(user.Email)
+	if err != nil {
+		return nil, errors.New("error trying to generate token")
+	}
+	
+	return &LoginResponse{
+		Email:    user.Email,
+		Token: token,
+	}, nil
+}
