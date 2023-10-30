@@ -42,7 +42,7 @@ type LoginResponse struct {
 	Token string `json:"token"`
 }
 
-func LoginUser(ur model.UserClient,loginParams LoginParams) (*LoginResponse, error) {
+func LoginUser(ur model.UserClient, loginParams LoginParams) (*LoginResponse, error) {
 	user, err := ur.UserFirst("email = ?", loginParams.Email)
 	if err != nil {
 		return nil, errors.New("error trying to find user")
@@ -67,12 +67,21 @@ func LoginUser(ur model.UserClient,loginParams LoginParams) (*LoginResponse, err
 type GoogleLoginParams struct {
 	Token string `json:"token"`
 	Email string `json:"email"`
+	Username string `json:"username"`
 }
 
 func GoogleLoginUser(ur model.UserClient, googleLoginParams GoogleLoginParams) (*LoginResponse, error) {
 	user, err := ur.UserFirst("email = ?", googleLoginParams.Email)
 	if err != nil {
-		return nil, errors.New("error trying to find user")
+		user = &model.User{
+			Name:     googleLoginParams.Username,
+			Email:    googleLoginParams.Email,
+		}
+	
+		err = ur.SaveUser(user)
+		if err != nil {
+			return nil, errors.New("error trying to save user")
+		}
 	}
 
 	token, err := GenerateToken(user.Email)
