@@ -41,28 +41,29 @@ func ObtenerFechasDisponiblesHandler(c *fiber.Ctx) error {
 func ObtenerHorariosDisponiblesHandler(c *fiber.Ctx) error {
 	fmt.Println("URL completa:", c.OriginalURL())
 	servicioParam := c.Params("service") // Obtiene el servicio de la solicitud (ajusta esto según tu enrutamiento)
-
+	fechaParam := c.Params("date")
 	// Reemplaza "%20" con un espacio en blanco en el valor del parámetro servicio
 	servicio := strings.Replace(servicioParam, "%20", " ", -1)
+	fecha := strings.Replace(fechaParam, "%20", " ", -1)
 
 	fmt.Println("servicio:", servicio)
+	fmt.Println("fecha:", fecha)
 	
 	// Obtén el servicio de reserva
 	db := database.DB
 	reservationClient := model.ReservationClient{DB: db}
 
 	// Llama a la función service.ObtenerFechasDisponibles para obtener las fechas no disponibles.
-	fechasNoDisponibles, err := service.ObtenerFechasDisponibles(reservationClient, servicio)
+	horariosDisponibles	, err := service.ObtenerHorariosDisponibles(reservationClient, servicio,fecha)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "error al obtener fechas no disponibles",
 		})
 	}
-
 	// Responde con un código 200 (OK) y envía las fechas no disponibles.
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"fechas_no_disponibles": fechasNoDisponibles,
+		"horarios": horariosDisponibles,
 	})
 }
 // ReservaCreate maneja las solicitudes para crear una nueva reserva.
