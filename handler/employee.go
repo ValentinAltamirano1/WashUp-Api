@@ -51,3 +51,25 @@ func EmployeeLogin(c *fiber.Ctx) error {
 	}
 	return c.Status(fiber.StatusOK).JSON(employee)
 }
+
+func EmployeeDelete(c *fiber.Ctx) error {
+	db := database.DB
+	employeeClient := model.EmployeeClient{DB: db}
+	var params service.EmployeeParams
+
+	if err := c.BodyParser(&params); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "error parsing JSON",
+		})
+	}
+
+	employee, err := service.DeleteEmployee(employeeClient, params.Email)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "error trying to delete employee",
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(employee)
+}

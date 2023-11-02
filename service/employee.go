@@ -82,3 +82,17 @@ func LoginEmployee(er model.EmployeeClient, email string, password string) (*Log
 		Token: token,
 	}, nil
 }
+
+func DeleteEmployee(er model.EmployeeClient, email string) (*model.Employee, error) {
+    employee, err := er.EmployeeFirst("email = ?", email)
+    if err != nil {
+        return nil, errors.New("error trying to find employee")
+    }
+
+    err = er.DeleteEmployee(employee)
+    if err != nil {
+        return nil, errors.New("error trying to delete employee")
+    }
+
+    return employee, nil
+}
