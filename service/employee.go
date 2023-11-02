@@ -54,7 +54,13 @@ func CreateEmployee(er model.EmployeeClient, employeeParams EmployeeParams) (*mo
 	return employee, nil
 }
 
-func LoginEmployee(er model.EmployeeClient, email string, password string) (*model.Employee, error) {
+type LoginEmployeeResponse struct {
+	Email string `json:"email"`
+	FullName string `json:"fullname"`
+	Token string `json:"token"`
+}
+
+func LoginEmployee(er model.EmployeeClient, email string, password string) (*LoginEmployeeResponse, error) {
 	employee, err := er.EmployeeFirst("email = ?", email)
 	if err != nil {
 		return nil, errors.New("error trying to find employee")
@@ -65,5 +71,14 @@ func LoginEmployee(er model.EmployeeClient, email string, password string) (*mod
 		return nil, errors.New("invalid password")
 	}
 
-	return employee, nil
+	token, err := GenerateToken(employee.Email)
+	if err != nil {
+		return nil, errors.New("error trying to generate token")
+	}
+
+	return &LoginEmployeeResponse{
+		Email:    employee.Email,
+		FullName: employee.FullName,
+		Token: token,
+	}, nil
 }
