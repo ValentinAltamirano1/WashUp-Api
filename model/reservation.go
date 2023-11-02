@@ -12,9 +12,11 @@ type ReservationClient struct {
 type Reservation struct {
     gorm.Model
 	Service   string `json:"service"`
-    Date      string `json:"date" gorm:"type:date"` // Utiliza la etiqueta gorm para especificar el tipo de fecha
+    Date      string `json:"date" gorm:"type:date"`
 	Time   string `json:"time"`
 	Location  string `json:"location"`
+    EmployeeID uint
+    UserID uint
 }
 
 type ReservationRepository interface {

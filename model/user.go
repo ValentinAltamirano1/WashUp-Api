@@ -14,6 +14,7 @@ type User struct {
     Name  string `json:"name"`
     Email string `json:"email" gorm:"uniqueIndex"`
     Password string 
+    Reservations []Reservation `gorm:"foreignKey:UserID"`
 }
 
 type UserRepository interface {
