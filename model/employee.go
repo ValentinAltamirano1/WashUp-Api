@@ -22,6 +22,7 @@ type Employee struct {
 	Department string `json:"department"`
 	Adress string `json:"adress"`
 	AdmissionDate time.Time `json:"admission_date"`
+	Reservations []Reservation `gorm:"foreignKey:EmployeeID"`
 }
 
 type EmployeeRepository interface {
