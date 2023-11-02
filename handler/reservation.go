@@ -44,17 +44,16 @@ func ObtenerHorariosDisponiblesHandler(c *fiber.Ctx) error {
 	fechaParam := c.Params("date")
 	// Reemplaza "%20" con un espacio en blanco en el valor del parámetro servicio
 	servicio := strings.Replace(servicioParam, "%20", " ", -1)
-	fecha := strings.Replace(fechaParam, "%20", " ", -1)
 
 	fmt.Println("servicio:", servicio)
-	fmt.Println("fecha:", fecha)
+	fmt.Println("fecha:", fechaParam)
 	
 	// Obtén el servicio de reserva
 	db := database.DB
 	reservationClient := model.ReservationClient{DB: db}
 
 	// Llama a la función service.ObtenerFechasDisponibles para obtener las fechas no disponibles.
-	horariosDisponibles	, err := service.ObtenerHorariosDisponibles(reservationClient, servicio,fecha)
+	horariosDisponibles	, err := service.ObtenerHorariosDisponibles(reservationClient, servicio,fechaParam)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
