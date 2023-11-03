@@ -31,37 +31,42 @@ func ObtenerFechasDisponibles(rr model.ReservationClient, servicio string) ([]st
 }
 
 
-// ObtenerHorariosDisponibles obtiene los horarios disponibles para un servicio en una fecha específica.
 func ObtenerHorariosDisponibles(rc model.ReservationClient, servicio string, fecha string) ([]string, error) {
-	// Obtenemos todos los horarios disponibles predeterminados para tu servicio (ajusta esto según tu lógica de negocio).
-	horariosPredeterminados := []string{
-		"9:00 AM", "10:00 AM", "11:00 AM", "2:00 PM", "3:00 PM",
-	}
+    // Horarios predeterminados.
+    horariosPredeterminados := []string{
+        "9:00 AM", "10:00 AM", "11:00 AM", "2:00 PM", "3:00 PM",
+    }
 
-	// Obtenemos las reservas existentes para el servicio y fecha específicos.
-	reservas, err := rc.GetAllReservationsByServiceAndDate(servicio, fecha)
-	if err != nil {
-		return nil, err
-	}
+    // Obtener reservas para el servicio y la fecha específicos.
+    reservas, err := rc.GetAllReservationsByServiceAndDate(servicio, fecha)
+    if err != nil {
+        return nil, err
+    }
 
-	// Creamos un mapa para realizar una búsqueda eficiente de los horarios reservados.
-	horariosReservados := make(map[string]struct{})
-	for _, reserva := range reservas {
-		horariosReservados[reserva.Date] = struct{}{}
-	}
+    // Crear un mapa para almacenar los horarios reservados.
+    horariosOcupados := make(map[string]struct{})
 
-	// Creamos un slice para almacenar los horarios disponibles.
-	horariosDisponibles := []string{}
+    // Iterar sobre las reservas y registrar los horarios reservados.
+    for _, reserva := range reservas {
+        horariosOcupados[reserva.Time] = struct{}{}
+    }
 
-	// Iteramos sobre los horarios predeterminados y agregamos solo los no reservados.
-	for _, horario := range horariosPredeterminados {
-		if _, reservado := horariosReservados[horario]; !reservado {
-			horariosDisponibles = append(horariosDisponibles, horario)
-		}
-	}
+    // Crear un slice para almacenar los horarios disponibles.
+    horariosDisponibles := []string{}
 
-	return horariosDisponibles, nil
+    // Iterar sobre los horarios predeterminados y agregar solo los no ocupados.
+    for _, horario := range horariosPredeterminados {
+        // Comprobar si el horario actual no está ocupado y, si no lo está, agregarlo a horariosDisponibles.
+        if _, ocupado := horariosOcupados[horario]; !ocupado {
+            horariosDisponibles = append(horariosDisponibles, horario)
+        }
+    }
+
+    return horariosDisponibles, nil
 }
+
+
+
 
 
 
