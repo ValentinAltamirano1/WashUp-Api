@@ -15,8 +15,8 @@ type Reservation struct {
     Date      string `json:"date" gorm:"type:date"`
 	Time   string `json:"time"`
 	Location  string `json:"location"`
-    EmployeeID uint
-    UserID uint
+    EmployeeID *uint
+    UserID *uint
 }
 
 type ReservationRepository interface {

@@ -76,18 +76,23 @@ type ReservationParams struct {
 	Fecha     string `json:"fecha"`
 	Horario   string `json:"horario"`
 	Ubicacion string `json:"ubicacion"`
+	UserEmail string `json:"user_email"`
 }
 
-func CreateReservation(rr model.ReservationClient, params ReservationParams) (*model.Reservation, error) {
-	// Crear una instancia de model.Reservation con los datos proporcionados en params.
+func CreateReservation(rr model.ReservationClient, ur model.UserClient, params ReservationParams) (*model.Reservation, error) {
+	user, err := ur.UserFirst("email = ?", params.UserEmail)
+	if err != nil {
+		return nil, errors.New("error trying to find user")
+	}
+
 	reserva := &model.Reservation{
 		Service:   params.Servicio,
 		Date:      params.Fecha,
 		Time:      params.Horario,
 		Location:  params.Ubicacion,
+		UserID:   &user.ID,
 	}
 
-	// Insertar la reserva en la base de datos.
 	if err := rr.SaveReservation(reserva); err != nil {
 		return nil, errors.New("error trying to save reservation")
 	}
