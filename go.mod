@@ -15,6 +15,7 @@ require (
 require (
 	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/fabianMendez/mercadopago v1.0.4
 	github.com/gofiber/fiber/v2 v2.49.1 // indirect
 	github.com/google/uuid v1.3.1 // indirect
 	github.com/jinzhu/gorm v1.9.16 // indirect
