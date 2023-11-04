@@ -96,3 +96,69 @@ func DeleteEmployee(er model.EmployeeClient, email string) (*model.Employee, err
 
     return employee, nil
 }
+
+
+func AllReservationsWithoutEmployeeGet(rr model.ReservationClient) ([]model.Reservation, error) {
+	reservations, err := rr.GetAllReservationsWithoutEmployee()
+	if err != nil {
+		return nil, errors.New("error trying to find reservations")
+	}
+
+	fmt.Println(reservations)
+	return reservations, nil
+}
+
+type EmployeeReservationParams struct {
+    Email string `json:"email"`
+    ReservationID uint `json:"reservation_id"`
+}
+
+func EmployeeConfirmReservation(rc model.ReservationClient, ec model.EmployeeClient, employeeReservationParams EmployeeReservationParams) (error) {
+	fmt.Println(employeeReservationParams)
+	reservation, err := rc.ReservationFirst("id = ?", employeeReservationParams.ReservationID)
+	if err != nil {
+		return errors.New("error trying to find reservation")
+	}
+
+	employee, err := ec.EmployeeFirst("email = ?", employeeReservationParams.Email)
+	if err != nil {
+		return errors.New("error trying to find employee")
+	}
+
+	err = rc.UpdateReservation(reservation, &model.Reservation{
+		EmployeeID: &employee.ID,
+	})
+	if err != nil {
+		return errors.New("error trying to update reservation")
+	}
+
+	return err
+}
+
+func GetAllReservationsByEmployee(rc model.ReservationClient,ec model.EmployeeClient, email string) ([]model.Reservation, error) {
+	employee, err := ec.EmployeeFirst("email = ?", email)
+	if err != nil {
+		return nil, errors.New("error trying to find employee")
+	}
+
+	reservations, err := rc.GetAllReservationsByEmployee(employee.ID)
+	if err != nil {
+		return nil, errors.New("error trying to find reservations")
+	}
+
+	return reservations, nil
+}
+
+func GetAllReservationsDoneByEmployee(rc model.ReservationClient,ec model.EmployeeClient, email string) ([]model.Reservation, error) {
+	employee, err := ec.EmployeeFirst("email = ?", email)
+	if err != nil {
+		return nil, errors.New("error trying to find employee")
+	}
+
+	reservations, err := rc.GetAllReservationsDoneByEmployee(employee.ID)
+	if err != nil {
+		return nil, errors.New("error trying to find reservations")
+	}
+
+	return reservations, nil
+}

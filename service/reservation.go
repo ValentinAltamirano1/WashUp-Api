@@ -18,7 +18,7 @@ func ObtenerFechasDisponibles(rr model.ReservationClient, servicio string) ([]st
 
         reservasParaFecha, err := rr.GetAllReservationsByServiceAndDate(servicio, fechaStr)
         if err != nil {
-            return nil, err // Manejar el error adecuadamente, según tu lógica de negocio.
+            return nil, err 
         }
 
         if len(reservasParaFecha) == 4 {
@@ -32,31 +32,26 @@ func ObtenerFechasDisponibles(rr model.ReservationClient, servicio string) ([]st
 
 
 func ObtenerHorariosDisponibles(rc model.ReservationClient, servicio string, fecha string) ([]string, error) {
-    // Horarios predeterminados.
+
     horariosPredeterminados := []string{
         "9:00 AM", "10:00 AM", "11:00 AM", "2:00 PM", "3:00 PM",
     }
 
-    // Obtener reservas para el servicio y la fecha específicos.
     reservas, err := rc.GetAllReservationsByServiceAndDate(servicio, fecha)
     if err != nil {
         return nil, err
     }
 
-    // Crear un mapa para almacenar los horarios reservados.
     horariosOcupados := make(map[string]struct{})
 
-    // Iterar sobre las reservas y registrar los horarios reservados.
     for _, reserva := range reservas {
         horariosOcupados[reserva.Time] = struct{}{}
     }
 
-    // Crear un slice para almacenar los horarios disponibles.
     horariosDisponibles := []string{}
 
-    // Iterar sobre los horarios predeterminados y agregar solo los no ocupados.
     for _, horario := range horariosPredeterminados {
-        // Comprobar si el horario actual no está ocupado y, si no lo está, agregarlo a horariosDisponibles.
+
         if _, ocupado := horariosOcupados[horario]; !ocupado {
             horariosDisponibles = append(horariosDisponibles, horario)
         }
@@ -65,12 +60,6 @@ func ObtenerHorariosDisponibles(rc model.ReservationClient, servicio string, fec
     return horariosDisponibles, nil
 }
 
-
-
-
-
-
-// ReservationParams contiene los parámetros necesarios para crear una reserva.
 type ReservationParams struct {
 	Servicio  string `json:"servicio"`
 	Fecha     string `json:"fecha"`
@@ -100,17 +89,31 @@ func CreateReservation(rr model.ReservationClient, ur model.UserClient, params R
 	return reserva, nil
 }
 
-
-// ReservationCheckParams contiene los parámetros necesarios para verificar la disponibilidad de un horario y fecha.
 type ReservationCheckParams struct {
 	Fecha   string `json:"fecha"`
 	Horario string `json:"horario"`
 }
 
-// CheckReservation verifica la disponibilidad de un horario y fecha específicos.
 func CheckReservation(rr model.ReservationClient, params ReservationCheckParams) (bool, error) {
-	// Aquí puedes implementar la lógica para verificar la disponibilidad de un horario y fecha.
-	// Consulta la base de datos u otro método para verificar si el horario está ocupado.
-	// Retorna true si el horario está disponible, false si está ocupado o un error en caso de problemas.
 	return false, errors.New("CheckReservation function not implemented")
+}
+
+type EmployeeReservationDoneParams struct {
+    ReservationID uint `json:"reservation_id"`
+}
+
+func EmployeeReservationDone(rc model.ReservationClient, employeeReservationDoneParams EmployeeReservationDoneParams) (error) {
+	reservation, err := rc.ReservationFirst("id = ?", employeeReservationDoneParams.ReservationID)
+	if err != nil {
+		return errors.New("error trying to find reservation")
+	}
+
+	err = rc.UpdateReservation(reservation, &model.Reservation{
+		State: "done",
+	})
+	if err != nil {
+		return errors.New("error trying to update reservation")
+	}
+
+	return err
 }
