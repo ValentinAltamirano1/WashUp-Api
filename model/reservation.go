@@ -62,3 +62,15 @@ func (rr ReservationClient) GetAllReservationsByServiceAndDate(servicio string, 
     }
     return reservas, nil
 }
+
+// GetAllReservationsByUserID obtiene todas las reservas para un usuario específico
+func (rc *ReservationClient) GetAllReservationsByUserID(userID string) ([]Reservation, error) {
+    var misReservas []Reservation
+
+    // Realiza una consulta en la base de datos para obtener todas las reservas para el servicio dado.
+    if err := rc.DB.Where("userID = ?", userID).Find(&misReservas).Error; err != nil {
+        return nil, err
+    }
+
+    return misReservas, nil
+}
