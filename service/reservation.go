@@ -60,6 +60,17 @@ func ObtenerHorariosDisponibles(rc model.ReservationClient, servicio string, fec
     return horariosDisponibles, nil
 }
 
+func ObtenerMisReservas(rr model.ReservationClient, userID string) ([]model.Reservation, error) {
+
+    misReservas, err := rr.GetAllReservationsByUserID(userID)
+    if err != nil {
+        return nil, err // Manejar el error adecuadamente, según tu lógica de negocio.
+    }
+    
+
+    return misReservas, nil
+}
+
 type ReservationParams struct {
 	Servicio  string `json:"servicio"`
 	Fecha     string `json:"fecha"`
