@@ -33,7 +33,8 @@ func SetRouters() *fiber.App {
 	app.Delete("/employee/delete", handler.EmployeeDelete)
 	app.Get("/horariosdisponibles/:service/:date", handler.ObtenerHorariosDisponiblesHandler)
 	app.Post("/crear-preferencia", handler.PaymentMercadoPago)
-	app.Get("/my-reservations/:userID", handler.ObtenerMisReservas)
+	app.Get("/my-reservations/:email", handler.ObtenerMisReservas)
+	app.Delete("/cancel-reservations/:reservationID", handler.ReservationDelete)
 
 	
 	app.Use(middleware.AuthRequired())
