@@ -37,7 +37,7 @@ func SetRouters() *fiber.App {
 	app.Post("/employee/confirm-reservation", handler.EmployeeConfirmReservation)
 	app.Get("/employee/reservations/assigned/:email", handler.GetAllReservationsByEmployee)
 	app.Post("/employee/reservation-done", handler.EmployeeReservationDone)
-	app.Get("/employee/reservations/done/assigned/:email", handler.GetAllReservationsDoneByEmployee)
+	app.Get("/employee/reservations/done/assigned/:email/:year/:month", handler.GetAllReservationsDoneByEmployee)
 	
 	app.Use(middleware.AuthRequired())
 

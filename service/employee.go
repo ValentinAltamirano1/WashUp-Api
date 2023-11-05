@@ -149,13 +149,13 @@ func GetAllReservationsByEmployee(rc model.ReservationClient,ec model.EmployeeCl
 	return reservations, nil
 }
 
-func GetAllReservationsDoneByEmployee(rc model.ReservationClient,ec model.EmployeeClient, email string) ([]model.Reservation, error) {
+func GetAllReservationsDoneByEmployee(rc model.ReservationClient,ec model.EmployeeClient, email string, year string, month string) ([]model.Reservation, error) {
 	employee, err := ec.EmployeeFirst("email = ?", email)
 	if err != nil {
 		return nil, errors.New("error trying to find employee")
 	}
 
-	reservations, err := rc.GetAllReservationsDoneByEmployee(employee.ID)
+	reservations, err := rc.GetAllReservationsDoneByEmployee(employee.ID, year, month)
 	if err != nil {
 		return nil, errors.New("error trying to find reservations")
 	}
