@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -82,9 +83,10 @@ func (rr ReservationClient) GetAllReservationsByEmployee(employeeID uint) ([]Res
     return reservas, nil
 }
 
-func (rr ReservationClient) GetAllReservationsDoneByEmployee(employeeID uint) ([]Reservation, error) {
+func (rr ReservationClient) GetAllReservationsDoneByEmployee(employeeID uint, year string, month string) ([]Reservation, error) {
+    fmt.Println(employeeID, month)
     var reservas []Reservation
-    if err := rr.DB.Where("employee_id = ? AND state = ?", employeeID, "done").Find(&reservas).Error; err != nil {
+    if err := rr.DB.Where("employee_id = ? AND state = 'done' AND SUBSTRING(date, 1, 4) = ? AND SUBSTRING(date, 6, 2) = ?", employeeID, year, month).Find(&reservas).Error; err != nil {
         return nil, err
     }
     return reservas, nil

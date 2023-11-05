@@ -134,8 +134,10 @@ func GetAllReservationsDoneByEmployee(c *fiber.Ctx) error {
 	reservationClient := model.ReservationClient{DB: db}
 	employeeClient := model.EmployeeClient{DB: db}
 	email := c.Params("email")
+	year := c.Params("year")
+	month := c.Params("month")
 
-	reservations, err := service.GetAllReservationsDoneByEmployee(reservationClient,employeeClient, email)
+	reservations, err := service.GetAllReservationsDoneByEmployee(reservationClient,employeeClient, email,year,month)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
