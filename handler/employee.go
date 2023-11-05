@@ -77,8 +77,9 @@ func EmployeeDelete(c *fiber.Ctx) error {
 func GetAllReservationsWithoutEmployee(c *fiber.Ctx) error {
 	db := database.DB
 	reservationClient := model.ReservationClient{DB: db}
+	month := c.Params("month")
 
-	reservations, err := service.AllReservationsWithoutEmployeeGet(reservationClient)
+	reservations, err := service.AllReservationsWithoutEmployeeGet(reservationClient,month)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{

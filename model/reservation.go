@@ -63,9 +63,9 @@ func (rr ReservationClient) GetAllReservationsByServiceAndDate(servicio string, 
     return reservas, nil
 }
 
-func (rr ReservationClient) GetAllReservationsWithoutEmployee() ([]Reservation, error) {
+func (rr ReservationClient) GetAllReservationsWithoutEmployee(month string) ([]Reservation, error) {
     var reservas []Reservation
-    if err := rr.DB.Where("employee_id IS NULL").Find(&reservas).Error; err != nil {
+    if err := rr.DB.Where("employee_id IS NULL AND SUBSTRING(date, 6, 2) = ?", month).Find(&reservas).Error; err != nil {
         return nil, err
     }
     return reservas, nil

@@ -98,13 +98,12 @@ func DeleteEmployee(er model.EmployeeClient, email string) (*model.Employee, err
 }
 
 
-func AllReservationsWithoutEmployeeGet(rr model.ReservationClient) ([]model.Reservation, error) {
-	reservations, err := rr.GetAllReservationsWithoutEmployee()
+func AllReservationsWithoutEmployeeGet(rr model.ReservationClient,month string) ([]model.Reservation, error) {
+	reservations, err := rr.GetAllReservationsWithoutEmployee(month)
 	if err != nil {
 		return nil, errors.New("error trying to find reservations")
 	}
 
-	fmt.Println(reservations)
 	return reservations, nil
 }
 
