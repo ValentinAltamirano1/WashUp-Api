@@ -73,3 +73,77 @@ func EmployeeDelete(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(employee)
 }
+
+func GetAllReservationsWithoutEmployee(c *fiber.Ctx) error {
+	db := database.DB
+	reservationClient := model.ReservationClient{DB: db}
+
+	reservations, err := service.AllReservationsWithoutEmployeeGet(reservationClient)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "error trying to get all reservations without employee",
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(reservations)
+}
+
+func EmployeeConfirmReservation(c *fiber.Ctx) error {
+	db := database.DB
+	reservationClient := model.ReservationClient{DB: db}
+	employeeClient := model.EmployeeClient{DB: db}
+	var params service.EmployeeReservationParams
+
+	if err := c.BodyParser(&params); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "error parsing JSON",
+		})
+	}
+
+	err := service.EmployeeConfirmReservation(reservationClient, employeeClient, params)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "error trying to confirm reservation",
+		})
+	}
+
+	return c.SendStatus(fiber.StatusOK)
+}
+
+func GetAllReservationsByEmployee(c *fiber.Ctx) error {
+	db := database.DB
+	reservationClient := model.ReservationClient{DB: db}
+	employeeClient := model.EmployeeClient{DB: db}
+	email := c.Params("email")
+
+	reservations, err := service.GetAllReservationsByEmployee(reservationClient,employeeClient, email)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "error trying to get all reservations by employee",
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(reservations)
+}
+
+func GetAllReservationsDoneByEmployee(c *fiber.Ctx) error {
+	db := database.DB
+	reservationClient := model.ReservationClient{DB: db}
+	employeeClient := model.EmployeeClient{DB: db}
+	email := c.Params("email")
+	year := c.Params("year")
+	month := c.Params("month")
+
+	reservations, err := service.GetAllReservationsDoneByEmployee(reservationClient,employeeClient, email,year,month)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "error trying to get all reservations done by employee",
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(reservations)
+}

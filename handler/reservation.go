@@ -34,7 +34,6 @@ func ObtenerFechasDisponiblesHandler(c *fiber.Ctx) error {
 }
 
 func ObtenerHorariosDisponiblesHandler(c *fiber.Ctx) error {
-	fmt.Println("URL completa:", c.OriginalURL())
 	servicioParam := c.Params("service")
 	fechaParam := c.Params("date")
 	servicio := strings.Replace(servicioParam, "%20", " ", -1)
@@ -137,6 +136,24 @@ func ReservationDelete(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "error al verificar disponibilidad",
+}
+                                                 
+func EmployeeReservationDone(c *fiber.Ctx) error {
+	db := database.DB
+	reservationClient := model.ReservationClient{DB: db}
+	var params service.EmployeeReservationDoneParams
+
+	if err := c.BodyParser(&params); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "error parsing JSON",
+		})
+	}
+
+	err := service.EmployeeReservationDone(reservationClient, params)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "error trying to confirm reservation",
 		})
 	}
 

@@ -35,6 +35,13 @@ func SetRouters() *fiber.App {
 	app.Post("/crear-preferencia", handler.PaymentMercadoPago)
 	app.Get("/my-reservations/:email", handler.ObtenerMisReservas)
 	app.Delete("/cancel-reservations/:reservationID", handler.ReservationDelete)
+	app.Get("/employee/reservations-without-assignment", handler.GetAllReservationsWithoutEmployee)
+	app.Post("/employee/confirm-reservation", handler.EmployeeConfirmReservation)
+	app.Get("/employee/reservations/assigned/:email", handler.GetAllReservationsByEmployee)
+	app.Post("/employee/reservation-done", handler.EmployeeReservationDone)
+	app.Get("/employee/reservations/done/assigned/:email/:year/:month", handler.GetAllReservationsDoneByEmployee)
+	app.Get("/my-reservations/:userID", handler.ObtenerMisReservas)
+
 
 	
 	app.Use(middleware.AuthRequired())
