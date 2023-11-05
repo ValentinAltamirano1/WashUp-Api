@@ -92,7 +92,7 @@ func (rr ReservationClient) GetAllReservationsDoneByEmployee(employeeID uint, ye
     return reservas, nil
 }
 
-func (rc *ReservationClient) GetAllReservationsByUserID(userID string) ([]Reservation, error) {
+func (rc *ReservationClient) GetAllReservationsByUserID(userID uint) ([]Reservation, error) {
     var misReservas []Reservation
 
     // Realiza una consulta en la base de datos para obtener todas las reservas para el servicio dado.

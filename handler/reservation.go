@@ -59,8 +59,6 @@ func ObtenerMisReservas(c *fiber.Ctx) error {
 	reservationClient := model.ReservationClient{DB: db}
 	userClient := model.UserClient{DB: db}
 	userEmailParam := c.Params("email")
-	fmt.Println("userEmail: ", userEmailParam);
-	
 
 	misReservas, err := service.ObtenerMisReservas(reservationClient, userClient, userEmailParam)
 
@@ -136,6 +134,10 @@ func ReservationDelete(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "error al verificar disponibilidad",
+		})
+	}
+
+	return c.SendStatus(fiber.StatusOK)
 }
                                                  
 func EmployeeReservationDone(c *fiber.Ctx) error {

@@ -60,9 +60,8 @@ func ObtenerHorariosDisponibles(rc model.ReservationClient, servicio string, fec
     return horariosDisponibles, nil
 }
 
-func ObtenerMisReservas(rr model.ReservationClient, ur model.UserClient, userEmail string) ([]model.Reservation, error) {
-
-    user, err := ur.UserFirst("email = ?", userEmail)
+func ObtenerMisReservas(rr model.ReservationClient, uc model.UserClient, userEmail string) ([]model.Reservation, error) {
+    user, err := uc.UserFirst("email = ?", userEmail)
 	if err != nil {
 		return nil, errors.New("error trying to find user")
 	}
