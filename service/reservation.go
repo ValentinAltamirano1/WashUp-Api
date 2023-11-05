@@ -60,12 +60,20 @@ func ObtenerHorariosDisponibles(rc model.ReservationClient, servicio string, fec
     return horariosDisponibles, nil
 }
 
-func ObtenerMisReservas(rr model.ReservationClient, userID string) ([]model.Reservation, error) {
+func ObtenerMisReservas(rr model.ReservationClient, ur model.UserClient, userEmail string) ([]model.Reservation, error) {
 
-    misReservas, err := rr.GetAllReservationsByUserID(userID)
+    user, err := ur.UserFirst("email = ?", userEmail)
+	if err != nil {
+		return nil, errors.New("error trying to find user")
+	}
+
+
+    misReservas, err := rr.GetAllReservationsByUserID(user.ID)
     if err != nil {
         return nil, err // Manejar el error adecuadamente, según tu lógica de negocio.
     }
+
+    fmt.Println("mis reservas:",misReservas);
     
 
     return misReservas, nil
@@ -109,6 +117,27 @@ type ReservationCheckParams struct {
 
 func CheckReservation(rr model.ReservationClient, params ReservationCheckParams) (bool, error) {
 	return false, errors.New("CheckReservation function not implemented")
+}
+
+type ReservationDeleteParams struct { 
+    ReservationID uint `json:"reservation_id"`
+} 
+
+func DeleteReservation(rr model.ReservationClient, reservationID string) error {
+    fmt.Println(reservationID)
+    reservation, err := rr.ReservationFirst("id = ?", reservationID)
+
+    if err != nil {
+		return errors.New("error trying to find reservation")
+	}
+
+    err = rr.DeleteReservation(reservation)
+
+    if err != nil {
+		return errors.New("error trying to find reservation")
+	}
+
+    return err
 }
 
 type EmployeeReservationDoneParams struct {

@@ -96,7 +96,7 @@ func (rc *ReservationClient) GetAllReservationsByUserID(userID string) ([]Reserv
     var misReservas []Reservation
 
     // Realiza una consulta en la base de datos para obtener todas las reservas para el servicio dado.
-    if err := rc.DB.Where("userID = ?", userID).Find(&misReservas).Error; err != nil {
+    if err := rc.DB.Where("user_id = ?", userID).Find(&misReservas).Error; err != nil {
         return nil, err
     }
 

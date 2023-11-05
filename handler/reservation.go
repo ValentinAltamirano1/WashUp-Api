@@ -55,14 +55,14 @@ func ObtenerHorariosDisponiblesHandler(c *fiber.Ctx) error {
 }
 
 func ObtenerMisReservas(c *fiber.Ctx) error {
-	//fmt.Println("URL completa:", c.OriginalURL())
-	userIDParam := c.Params("userID")
-
-
 	db := database.DB
 	reservationClient := model.ReservationClient{DB: db}
+	userClient := model.UserClient{DB: db}
+	userEmailParam := c.Params("email")
+	fmt.Println("userEmail: ", userEmailParam);
+	
 
-	misReservas, err := service.ObtenerMisReservas(reservationClient, userIDParam)
+	misReservas, err := service.ObtenerMisReservas(reservationClient, userClient, userEmailParam)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -125,6 +125,19 @@ func ReservaCheck(c *fiber.Ctx) error {
 	})
 }
 
+func ReservationDelete(c *fiber.Ctx) error {
+	db := database.DB
+	reservationClient := model.ReservationClient{DB: db}
+	reservationID := c.Params("reservationID")
+	fmt.Println(reservationID)
+
+	err := service.DeleteReservation(reservationClient, reservationID)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "error al verificar disponibilidad",
+}
+                                                 
 func EmployeeReservationDone(c *fiber.Ctx) error {
 	db := database.DB
 	reservationClient := model.ReservationClient{DB: db}
