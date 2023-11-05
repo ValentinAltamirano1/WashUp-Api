@@ -40,6 +40,7 @@ type LoginParams struct {
 type LoginResponse struct {
 	Email string `json:"email"`
 	Token string `json:"token"`
+	FullName string `json:"fullname"`
 }
 
 func LoginUser(ur model.UserClient, loginParams LoginParams) (*LoginResponse, error) {
@@ -61,6 +62,7 @@ func LoginUser(ur model.UserClient, loginParams LoginParams) (*LoginResponse, er
 	return &LoginResponse{
 		Email:    user.Email,
 		Token: token,
+		FullName: user.Name,
 	}, nil
 }
 
