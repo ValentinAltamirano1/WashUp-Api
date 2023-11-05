@@ -15,6 +15,7 @@ type Reservation struct {
     Date      string `json:"date"`
 	Time   string `json:"time"`
 	Location  string `json:"location"`
+    TotalPrice float64 `json:"total_price"`
     EmployeeID *uint
     UserID *uint
     State string `json:"state"`

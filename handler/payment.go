@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"fmt"
+
 	"github.com/ValentinAltamirano1/WashUp-Api/service"
 	"github.com/gofiber/fiber/v2"
 )
@@ -20,6 +22,8 @@ func PaymentMercadoPago(c *fiber.Ctx) error {
 			"error": "error creating preference",
 		})
 	}
-
-	return c.Status(fiber.StatusCreated).JSON(preference)
+	fmt.Println(preference)
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
+		"init_point": preference,
+	})
 }
