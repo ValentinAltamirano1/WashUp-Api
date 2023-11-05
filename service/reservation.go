@@ -77,6 +77,7 @@ type ReservationParams struct {
 	Horario   string `json:"horario"`
 	Ubicacion string `json:"ubicacion"`
 	UserEmail string `json:"user_email"`
+    TotalPrice float64 `json:"total_price"`
 }
 
 func CreateReservation(rr model.ReservationClient, ur model.UserClient, params ReservationParams) (*model.Reservation, error) {
@@ -90,6 +91,7 @@ func CreateReservation(rr model.ReservationClient, ur model.UserClient, params R
 		Date:      params.Fecha,
 		Time:      params.Horario,
 		Location:  params.Ubicacion,
+        TotalPrice: params.TotalPrice,
 		UserID:   &user.ID,
 	}
 
