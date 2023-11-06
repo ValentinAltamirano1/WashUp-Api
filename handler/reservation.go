@@ -161,3 +161,40 @@ func EmployeeReservationDone(c *fiber.Ctx) error {
 
 	return c.SendStatus(fiber.StatusOK)
 }
+
+func GetTotalProfitByMonth(c *fiber.Ctx) error {
+	db := database.DB
+	reservationClient := model.ReservationClient{DB: db}
+	month := c.Params("month")
+	year := c.Params("year")
+
+	profit, err := service.GetTotalProfitByMonth(reservationClient, month, year)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "error trying to get profit",
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"profit": profit,
+	})
+}
+
+func GetTotalProfitByYear(c *fiber.Ctx) error {
+	db := database.DB
+	reservationClient := model.ReservationClient{DB: db}
+	year := c.Params("year")
+
+	profit, err := service.GetTotalProfitByYear(reservationClient, year)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "error trying to get profit",
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"profit": profit,
+	})
+}

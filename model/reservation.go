@@ -96,9 +96,25 @@ func (rc *ReservationClient) GetAllReservationsByUserID(userID uint) ([]Reservat
     var misReservas []Reservation
 
     // Realiza una consulta en la base de datos para obtener todas las reservas para el servicio dado.
-    if err := rc.DB.Where("user_id = ?", userID).Find(&misReservas).Error; err != nil {
+    if err := rc.DB.Where("user_id = ? AND state IS NULL", userID).Find(&misReservas).Error; err != nil {
         return nil, err
     }
 
     return misReservas, nil
+}
+
+func (rr ReservationClient) GetTotalProfitByMonth(month, year string) (float64, error) {
+    var total float64
+    if err := rr.DB.Raw("SELECT COALESCE(SUM(total_price), 0) FROM reservations WHERE SUBSTRING(date, 1, 4) = ? AND SUBSTRING(date, 6, 2) = ?", year, month).Scan(&total).Error; err != nil {
+        return 0, err
+    }
+    return total, nil
+}
+
+func (rr ReservationClient) GetTotalProfitByYear(year string) (float64, error) {
+    var total float64
+    if err := rr.DB.Raw("SELECT COALESCE(SUM(total_price), 0) FROM reservations WHERE SUBSTRING(date, 1, 4) = ?", year).Scan(&total).Error; err != nil {
+        return 0, err
+    }
+    return total, nil
 }
