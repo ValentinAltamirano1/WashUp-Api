@@ -40,6 +40,8 @@ func SetRouters() *fiber.App {
 	app.Get("/employee/reservations/assigned/:email", handler.GetAllReservationsByEmployee)
 	app.Post("/employee/reservation-done", handler.EmployeeReservationDone)
 	app.Get("/employee/reservations/done/assigned/:email/:year/:month", handler.GetAllReservationsDoneByEmployee)
+	app.Get("/reservations/profit/:year/:month", handler.GetTotalProfitByMonth)
+	app.Get("/reservations/profit/:year", handler.GetTotalProfitByYear)
 
 	
 	app.Use(middleware.AuthRequired())

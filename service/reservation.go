@@ -158,3 +158,22 @@ func EmployeeReservationDone(rc model.ReservationClient, employeeReservationDone
 
 	return err
 }
+
+func GetTotalProfitByMonth(rc model.ReservationClient, month string, year string) (float64, error) {
+    profit, err := rc.GetTotalProfitByMonth(month, year)
+    if err != nil {
+        return 0.0, err
+    }
+
+    return profit, nil
+}
+
+func GetTotalProfitByYear(rc model.ReservationClient, year string) (float64, error) {
+    fmt.Println(year)
+    profit, err := rc.GetTotalProfitByYear(year)
+    if err != nil {
+        return 0.0, err
+    }
+
+    return profit, nil
+}
